@@ -63,14 +63,13 @@ for a local XAMPP server$default
  |       /          /\  \
  |   __  \         /  \  \
  |  |__|  |  __   /  / \  \   __  
- |________/   /  /__/   \__\   /  \e[93m 0.1.9
+ |________/   /  /__/   \__\   /  \e[93m 0.2.0
 $lCyan
 Плагин добавления нового виртуального хоста
 для локального сервера XAMPP$default
 -------------------------------------
 
 EOT;
-
 
 	function setLang()
 	{
@@ -90,7 +89,6 @@ EOT;
 		if (!isset($lang) || $lang > 2) {
 			setLang();
 		}
-		sleep(1);
 		if ($lang == 1) {
 			if (!is_dir('apache/conf/extra')) {
 				printString("\e[91mПереместите файл vh.php в папку XAMPP и запустите его оттуда");
@@ -123,13 +121,18 @@ EOT;
 	{
 		global $lang;
 		if ($lang == 1) {
-			$host = readline('Введите название локального сайта, который создаёте:');
+			$host = readline('Введите название локального сайта, который создаёте: ');
+			printString('------------------------');
+
+			$newDir = readline('Создать папку для нового проекта? Да - 1 | Нет - 2 : ');
 			printString('------------------------');
 
 			if ($host) {
+				if ($newDir == 1) {
+					mkdir("htdocs/$host");
+				}
 				file_put_contents('C:\Windows\System32\drivers\etc\hosts', getHostsData($host), FILE_APPEND);
 				file_put_contents($xVhost, getXamppHostData($host), FILE_APPEND);
-				sleep(1);
 				printString('Добавление данных в hosts...', $color3);
 				sleep(1);
 				printString('Добавление данных для локального сервера...', $color3);
@@ -142,13 +145,18 @@ EOT;
 
 		} else {
 
-			$host = readline('Enter the name of the local site:');
+			$host = readline('Enter the name of the local site: ');
+			printString('------------------------');
+
+			$newDir = readline('Create a folder for a new project? Yes - 1 | No - 2 : ');
 			printString('------------------------');
 
 			if ($host) {
+				if ($newDir == 1) {
+					mkdir("htdocs/$host");
+				}
 				file_put_contents('C:\Windows\System32\drivers\etc\hosts', getHostsData($host), FILE_APPEND);
 				file_put_contents($xVhost, getXamppHostData($host), FILE_APPEND);
-				sleep(1);
 				printString('Adding data to the hosts file...', $color3);
 				sleep(1);
 				printString('Adding data for the local server...', $color3);
