@@ -63,7 +63,7 @@ for a local XAMPP server$default
  |       /          /\  \
  |   __  \         /  \  \
  |  |__|  |  __   /  / \  \   __  
- |________/   /  /__/   \__\   /  \e[93m 0.2.2
+ |________/   /  /__/   \__\   /  \e[93m 0.2.3
 $lCyan
 Плагин добавления нового виртуального хоста
 для локального сервера XAMPP$default
@@ -116,8 +116,15 @@ function getXamppData()
 	}
 }
 
-function setSystemDisk($lang, $host)
+function setSystemDisk($lang, $host, $xampVhost, int $dir = 0)
 {
+
+	if ($dir == 1) {
+		if (!file_exists("htdocs/$host")) {
+			mkdir("htdocs/$host");
+		}
+	}
+
 	if ($lang == 1) {
 		$systemDisk = readline('Системный каталог Windows находится на диске \'С\'? Да - 1 | Укажите диск: ');
 	} else {
@@ -125,12 +132,17 @@ function setSystemDisk($lang, $host)
 	}
 
 	if (empty($systemDisk)) {
-		setSystemDisk($lang, $host);
+		setSystemDisk($lang, $host, $xampVhost, $dir);
+		return false;
 	} elseif ($systemDisk == 1) {
 		file_put_contents('C:\Windows\System32\drivers\etc\hosts', getHostsData($host), FILE_APPEND);
 	} else {
 		file_put_contents($systemDisk . ':\Windows\System32\drivers\etc\hosts', getHostsData($host), FILE_APPEND);
 	}
+
+	printString('------------------------');
+
+	file_put_contents($xampVhost, getXamppHostData($host), FILE_APPEND);
 }
 
 function setNewHost($color, $xVhost, $color2, $color3)
@@ -142,17 +154,11 @@ function setNewHost($color, $xVhost, $color2, $color3)
 		printString('------------------------');
 
 		$newDir = readline('Создать папку для нового проекта? Да - 1 | Нет - 2 : ');
-		printString('------------------------');
 
 		if ($host) {
-			if ($newDir == 1) {
-				mkdir("htdocs/$host");
-			}
 
-			setSystemDisk($lang, $host);
-			printString('------------------------');
+			setSystemDisk($lang, $host, $xVhost, $newDir);
 
-			file_put_contents($xVhost, getXamppHostData($host), FILE_APPEND);
 			printString('Добавление данных в hosts...', $color3);
 			sleep(1);
 			printString('Добавление данных для локального сервера...', $color3);
@@ -171,14 +177,9 @@ function setNewHost($color, $xVhost, $color2, $color3)
 		printString('------------------------');
 
 		if ($host) {
-			if ($newDir == 1) {
-				mkdir("htdocs/$host");
-			}
 
-			setSystemDisk($lang, $host);
-			printString('------------------------');
+			setSystemDisk($lang, $host, $xVhost, $newDir);
 
-			file_put_contents($xVhost, getXamppHostData($host), FILE_APPEND);
 			printString('Adding data to the hosts file...', $color3);
 			sleep(1);
 			printString('Adding data for the local server...', $color3);
